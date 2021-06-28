@@ -72,14 +72,21 @@ class InputWidget extends StatelessWidget {
       );
 
   Widget buildTextField() => TextField(
-        focusNode: focusNode,
-        controller: controller,
-        style: TextStyle(fontSize: 16),
-        decoration: InputDecoration.collapsed(
-          hintText: 'Type your message...',
-          hintStyle: TextStyle(color: Colors.grey),
-        ),
-      );
+      focusNode: focusNode,
+      controller: controller,
+      style: TextStyle(fontSize: 16),
+      decoration: InputDecoration.collapsed(
+        hintText: 'Type your message...',
+        hintStyle: TextStyle(color: Colors.grey),
+      ),
+      onSubmitted: (value) {
+        if (controller.text.trim().isEmpty) {
+          return;
+        }
+
+        onSentMessage(controller.text);
+        controller.clear();
+      });
 
   Widget buildSend() => Container(
         margin: EdgeInsets.symmetric(horizontal: 4),
