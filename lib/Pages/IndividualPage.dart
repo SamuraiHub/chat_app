@@ -42,16 +42,13 @@ class _IndividualPageState extends State<IndividualPage> {
   @override
   void initState() {
     super.initState();
-
-    if (_scrollController.hasClients)
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 
   Widget Messages() {
     return ListView.builder(
       shrinkWrap: true,
       controller: _scrollController,
+      physics: BouncingScrollPhysics(),
       itemCount: widget.chatModel.messages.length + 1,
       itemBuilder: (context, index) {
         if (index == widget.chatModel.messages.length) {
@@ -225,6 +222,7 @@ class _IndividualPageState extends State<IndividualPage> {
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       !isEmojiVisible
                           ? Expanded(
@@ -239,20 +237,14 @@ class _IndividualPageState extends State<IndividualPage> {
                           isEmojiVisible: isEmojiVisible,
                           onSentMessage: (message) {
                             sendMessage(message);
-                            Timer(Duration(milliseconds: 300), () {
-                              _scrollController.jumpTo(
-                                  _scrollController.position.maxScrollExtent);
-                            });
+                            _moveScroll();
                           },
                           onSentImage: (String value) {
                             uploadImage(value).then((putImage) {
                               setImage(widget.sourchat.name,
                                   putImage['Image']['url']);
                               sendImage(putImage['Image']['url']);
-                              Timer(Duration(milliseconds: 300), () {
-                                _scrollController.jumpTo(
-                                    _scrollController.position.maxScrollExtent);
-                              });
+                              _moveScroll();
                             });
                           }),
                       isEmojiVisible
@@ -294,7 +286,7 @@ class _IndividualPageState extends State<IndividualPage> {
     setState(() {
       isEmojiVisible = !isEmojiVisible;
       if (isEmojiVisible) {
-        //_moveScroll();
+        _moveScroll();
       }
     });
   }

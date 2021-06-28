@@ -36,7 +36,6 @@ class GroupPage extends StatefulWidget {
 class _GroupPageState extends State<GroupPage> {
   FocusNode focusNode = FocusNode();
 
-  List<MessageModel> messages = [];
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
   bool isEmojiVisible = false;
@@ -45,37 +44,32 @@ class _GroupPageState extends State<GroupPage> {
   @override
   void initState() {
     super.initState();
-
-    messages = widget.chatModel.messages;
-
-    if (_scrollController.hasClients)
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 
   Widget Messages() {
     return ListView.builder(
       shrinkWrap: true,
       controller: _scrollController,
-      itemCount: messages.length + 1,
+      physics: BouncingScrollPhysics(),
+      itemCount: widget.chatModel.messages.length + 1,
       itemBuilder: (context, index) {
-        if (index == messages.length) {
+        if (index == widget.chatModel.messages.length) {
           return Container(
             height: 70,
           );
         }
-        if (messages[index].type == "Source") {
+        if (widget.chatModel.messages[index].type == "Source") {
           return OwnMessageCard(
-            message: messages[index].message,
-            img: messages[index].img,
-            time: messages[index].time,
+            message: widget.chatModel.messages[index].message,
+            img: widget.chatModel.messages[index].img,
+            time: widget.chatModel.messages[index].time,
           );
         } else {
           return GroupReplyCard(
-            message: messages[index].message,
-            user: messages[index].userName,
-            img: messages[index].img,
-            time: messages[index].time,
+            message: widget.chatModel.messages[index].message,
+            user: widget.chatModel.messages[index].userName,
+            img: widget.chatModel.messages[index].img,
+            time: widget.chatModel.messages[index].time,
           );
         }
       },
@@ -128,7 +122,7 @@ class _GroupPageState extends State<GroupPage> {
     //print(messages);
 
     setState(() {
-      messages.add(messageModel);
+      widget.chatModel.messages.add(messageModel);
     });
   }
 
@@ -142,7 +136,7 @@ class _GroupPageState extends State<GroupPage> {
     //print(messages);
 
     setState(() {
-      messages.add(messageModel);
+      widget.chatModel.messages.add(messageModel);
     });
   }
 
@@ -244,64 +238,47 @@ class _GroupPageState extends State<GroupPage> {
                 body: Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
-                  child: WillPopScope(
-                    child: Column(
-                      children: [
-                        !isEmojiVisible
-                            ? Expanded(
-                                //height: MediaQuery.of(context).size.height - 250,
-                                child: Messages())
-                            : Container(
-                                height: MediaQuery.of(context).size.height / 3,
-                                child: Messages()),
-                        InputWidget(
-                          onBlurred: toggleEmoji,
-                          controller: _controller,
-                          isEmojiVisible: isEmojiVisible,
-                          onSentMessage: (message) {
-                            sendMessage(message);
-                            Timer(Duration(milliseconds: 300), () {
-                              _scrollController.jumpTo(
-                                  _scrollController.position.maxScrollExtent);
-                            });
-                          },
-                          onSentImage: (String value) async {
-                            uploadImage(value).then((putImage) {
-                              setImage(widget.sourchat.name,
-                                  putImage['Image']['url']);
-                              sendImage(putImage['Image']['url']);
-                              Timer(Duration(milliseconds: 300), () {
-                                _scrollController.jumpTo(
-                                    _scrollController.position.maxScrollExtent);
-                              });
-                            });
-                          },
-                        ),
-                        isEmojiVisible
-                            ? Expanded(
-                                child: EmojiPicker(
-                                  emojiPickObserver: (dynamic emoji) {
-                                    setState(() {
-                                      _controller.text =
-                                          '${_controller.text}$emoji';
-                                      toggleEmoji();
-                                    });
-                                  },
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    ),
-                    onWillPop: () {
-                      if (isEmojiVisible) {
-                        setState(() {
-                          toggleEmoji();
-                        });
-                      } else {
-                        Navigator.pop(context);
-                      }
-                      return Future.value(false);
-                    },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      !isEmojiVisible
+                          ? Expanded(
+                              //height: MediaQuery.of(context).size.height - 250,
+                              child: Messages())
+                          : Container(
+                              height: MediaQuery.of(context).size.height / 3,
+                              child: Messages()),
+                      InputWidget(
+                        onBlurred: toggleEmoji,
+                        controller: _controller,
+                        isEmojiVisible: isEmojiVisible,
+                        onSentMessage: (message) {
+                          sendMessage(message);
+                          _moveScroll();
+                        },
+                        onSentImage: (String value) async {
+                          uploadImage(value).then((putImage) {
+                            setImage(
+                                widget.sourchat.name, putImage['Image']['url']);
+                            sendImage(putImage['Image']['url']);
+                            _moveScroll();
+                          });
+                        },
+                      ),
+                      isEmojiVisible
+                          ? Expanded(
+                              child: EmojiPicker(
+                                emojiPickObserver: (dynamic emoji) {
+                                  setState(() {
+                                    _controller.text =
+                                        '${_controller.text}$emoji';
+                                    toggleEmoji();
+                                  });
+                                },
+                              ),
+                            )
+                          : Container(),
+                    ],
                   ),
                 ),
               ),

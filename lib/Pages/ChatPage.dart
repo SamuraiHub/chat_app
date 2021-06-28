@@ -37,6 +37,9 @@ class _ChatPageState extends State<ChatPage> {
   int actions =
       0; // used to select from a set of actions (chats, add friend, creeate group, view profile, logout)
 
+  ScrollController _scrollController =
+      ScrollController(); // controls the scroll of the friends and groups a user can choose from
+
   late IO.Socket socket;
   late Timer
       _everyMinute; // used to reconnect every minute as connection might get lost.
@@ -483,6 +486,7 @@ class _ChatPageState extends State<ChatPage> {
                                   ),
                                   Expanded(
                                     child: ListView.builder(
+                                      controller: _scrollController,
                                       itemCount: widget.chatmodels.length,
                                       itemBuilder: (context, index) =>
                                           CustomCard(
