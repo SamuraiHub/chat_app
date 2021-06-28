@@ -23,11 +23,13 @@ class GroupPage extends StatefulWidget {
       {Key? key,
       required this.chatModel,
       required this.sourchat,
-      required this.socket})
+      required this.socket,
+      required this.onGroupNameChanged})
       : super(key: key);
   final ChatModel chatModel;
   final User sourchat;
   final IO.Socket socket;
+  final VoidCallback onGroupNameChanged;
 
   @override
   _GroupPageState createState() => _GroupPageState();
@@ -160,6 +162,7 @@ class _GroupPageState extends State<GroupPage> {
             back: () {
               setState(() {
                 viewGroupInfo = false;
+                widget.onGroupNameChanged();
               });
             })
         : Stack(

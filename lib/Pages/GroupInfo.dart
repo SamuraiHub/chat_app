@@ -104,6 +104,8 @@ class _GroupInfoState extends State<GroupInfo> {
   void initState() {
     super.initState();
     _controller.text = widget.chatModel.group.groupName;
+    print(widget.chatModel.group.createdBy);
+    print(widget.sourchat.name);
   }
 
   @override
@@ -135,7 +137,8 @@ class _GroupInfoState extends State<GroupInfo> {
           Padding(
             padding: const EdgeInsets.only(
                 left: 15.0, right: 15.0, top: 15, bottom: 0),
-            child: widget.chatModel.group.createdBy == widget.sourchat.name
+            child: widget.chatModel.group.createdBy ==
+                    widget.sourchat.name.toLowerCase()
                 ? editGroupName
                     ? TextField(
                         controller: _controller,

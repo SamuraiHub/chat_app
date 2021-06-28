@@ -518,7 +518,11 @@ class _ChatPageState extends State<ChatPage> {
                     ? new GroupPage(
                         chatModel: widget.chatmodels[selectedIndex],
                         sourchat: widget.sourchat,
-                        socket: socket)
+                        socket: socket,
+                        onGroupNameChanged: () {
+                          setState(() {});
+                        },
+                      )
                     : new IndividualPage(
                         chatModel: widget.chatmodels[selectedIndex],
                         sourchat: widget.sourchat,
