@@ -64,7 +64,7 @@ class _ChatPageState extends State<ChatPage> {
     onConnect();
 
     // defines a timer that reconnects when socket is disconnected;
-    _everyMinute = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    /* _everyMinute = Timer.periodic(Duration(seconds: 1), (Timer t) {
       socket.onDisconnect((data) {
         print('Disconnected');
         socket.connect();
@@ -73,7 +73,7 @@ class _ChatPageState extends State<ChatPage> {
 
         onConnect();
       });
-    });
+    });*/
   }
 
   void onConnect() {
