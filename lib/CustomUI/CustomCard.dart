@@ -1,5 +1,4 @@
 import 'package:chat_app/Model/ChatModel.dart';
-import 'package:chat_app/Pages/IndividualPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

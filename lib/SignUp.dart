@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:chat_app/main.dart';
+import 'package:path_provider/path_provider.dart';
 import 'CustomUI/WindowButtons.dart';
+import 'RSAUtils.dart';
 
 class SignUp extends StatelessWidget {
   @override
@@ -248,9 +252,29 @@ class _SignUpState extends State<signUp> {
           ..set('EmailAddress', email);
         response = await userid.save();
 
-        if (response.success)
+        if (response.success) {
           showSuccess('User was successfully Registered!');
-        else
+
+          /*var list = RSAUtils.generateKeys(1024);
+
+          var userid = user..set('publicKey', list[0]);
+          response = await userid.save();
+
+          if (response.success) {
+            final Directory directory =
+                await getApplicationDocumentsDirectory();
+
+            File file = File('${directory.path}/my_publicKey.pem');
+            await file.writeAsString(list[0]);
+
+            file = File('${directory.path}/my_privateKey.pem');
+            await file.writeAsString(list[1]);
+
+            showSuccess('User was successfully Registered!');
+          } else {
+            showError(response.error!.message);
+          }*/
+        } else
           showError(response.error!.message);
       } else {
         showError(response.error!.message);

@@ -6,7 +6,7 @@ import FlutterMacOS
 import Foundation
 
 import bitsdojo_window_macos
-import connectivity_macos
+import connectivity_plus_macos
 import package_info_plus_macos
 import path_provider_macos
 import shared_preferences_macos

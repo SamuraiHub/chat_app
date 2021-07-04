@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../RSAUtils.dart';
 import '../User.dart';
 import '../main.dart';
 
@@ -16,6 +17,7 @@ class Homescreen extends StatelessWidget {
   Homescreen({Key? key, required this.sourchat}) : super(key: key);
 
   final User sourchat;
+  //final RSAUtils rsa;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,9 @@ class Homescreen extends StatelessWidget {
                     ])),
                   ),
                   Expanded(
-                    child: homescreen(sourchat: sourchat),
+                    child: homescreen(
+                      sourchat: sourchat,
+                    ),
                   )
                 ]))));
   }
@@ -66,6 +70,7 @@ class homescreen extends StatefulWidget {
       List.filled(0, ChatModel(isGroup: false), growable: true);
 
   final User sourchat;
+  //final RSAUtils rsa;
 
   @override
   _HomescreenState createState() => _HomescreenState();

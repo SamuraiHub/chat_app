@@ -1,16 +1,17 @@
 import 'dart:io';
-
+import 'dart:convert';
+import 'dart:math';
+import 'dart:typed_data';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:chat_app/SignUp.dart';
-import 'package:filepicker_windows/filepicker_windows.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:chat_app/Screens/Homescreen.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'CustomUI/WindowButtons.dart';
+import 'RSAUtils.dart';
 import 'User.dart';
 
 Future<void> main() async {
@@ -21,7 +22,22 @@ Future<void> main() async {
   final keyParseServerUrl = 'https://parseapi.back4app.com';
 
   await Parse().initialize(keyApplicationId, keyParseServerUrl,
-      clientKey: keyClientKey, autoSendSessionId: true);
+      clientKey: keyClientKey,
+      liveQueryUrl: 'wss://samuraichat.b4a.io',
+      autoSendSessionId: true);
+
+  /*
+  var rsa = RSAUtils.getInstance(list[0], list[1]);
+  String str = "Come on Wuhan, China.😃";
+  print(str);
+  Uint8List sstr = utf8.encode(str) as Uint8List;
+  var enstr = rsa.encryptByPublicKey(sstr);
+  var ssstre = rsa.decryptByPrivateKey(enstr);
+  print(utf8.decode(ssstre));
+
+  enstr = rsa.encryptByPrivateKey(sstr);
+  ssstre = rsa.decryptByPublicKey(enstr);
+  print(utf8.decode(ssstre));*/
 
   runApp(MyApp());
 
@@ -89,6 +105,7 @@ class _LoginState extends State<Login> {
   final controllerUsername = TextEditingController();
   final controllerPassword = TextEditingController();
   late final User sourchat;
+  //late final RSAUtils rsa;
 
   @override
   Widget build(BuildContext context) {
@@ -186,6 +203,19 @@ class _LoginState extends State<Login> {
     var response = await user.login();
 
     if (response.success) {
+      try {
+        //final Directory directory = await getApplicationDocumentsDirectory();
+        //File file = File('${directory.path}/my_publicKey.pem');
+        //String pubKey = await file.readAsString();
+
+        //file = File('${directory.path}/my_privateKey.pem');
+        //String priKey = await file.readAsString();
+
+        //rsa = RSAUtils.getInstance(pubKey, priKey);
+      } catch (e) {
+        print("Couldn't read file");
+      }
+
       sourchat =
           User(username, user.get('userID'), user.emailAddress.toString());
       showSuccess("User was successfully login!");
